@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="047d166b-43ad-4b36-a34b-a51d52b00a18" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="6392d2eb-f229-4e2e-9c0f-566aaeaee16a" >
+		<file:connection workingDir="C:\Users\hailu\Desktop\Test-Batching" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="bb289305-9084-4584-8269-28fec0572ac7" >
+		<file:connection workingDir="C:\Users\hailu\Desktop\Test-Batching1" />
+	</file:config>
+	<flow name="salesforceFlow" doc:id="9a2577d7-a2b9-4a2a-bf37-bcd4498b909e" >
+		<http:listener doc:name="Listener" doc:id="f174da17-cc5e-45ac-8d8b-ad69c8f67c81" config-ref="HTTP_Listener_config1" path="/test" >
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="28dc8fc2-14d5-41ad-a764-5db1fc4aa6e3" message="#[payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="dff93a04-759b-4a78-b7f4-28597cda918d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7e14bb63-c60c-4b00-a0dc-088630c34698">
+			<route>
+				<choice doc:name="Choice" doc:id="fc105311-df41-4dfc-b3ae-d8f22aba271a">
+			<when expression='#[payload."visastatus" == "Active"]'>
+						<file:write doc:name="Write" doc:id="f015e77b-6a85-4226-964b-c751e3a11893" path="C:\Users\hailu\Desktop\Test-Batching\active.txt" config-ref="File_Config"/>
+					</when>
+					<otherwise>
+						<logger level="INFO" doc:name="Logger" doc:id="2a59eb7f-258a-41f9-9827-f866e87ed17d" message="#[payload]"/>
+			</otherwise>
+		</choice>
+			</route>
+			<route>
+				<choice doc:name="Choice" doc:id="64442b60-94f6-452b-965c-b8f22855ffca">
+					<when expression='#[payload."visastatus" == "Inactive"]'>
+						<file:write doc:name="Write" doc:id="63eaeeba-6a1f-4045-90b8-266bf832228c" config-ref="File_Config1" path="C:\Users\hailu\Desktop\Test-Batching1\Inactive.txt"/>
+					</when>
+					<otherwise>
+						<logger level="INFO" doc:name="Logger" doc:id="3d61924b-2a92-46ae-88a9-711812432087" message="#[payload]"/>
+					</otherwise>
+				</choice>
+			</route>
+		</scatter-gather>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error continue" doc:id="7be2ac12-688e-4271-8938-8651bd516adf" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="3ac6ab2d-4dde-41eb-b81b-ea482aa39684" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+ 
+ error.description]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+					</ee:variables>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

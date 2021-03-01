@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="output" format="json">
+      <types:shape format="weave" example="examples/contacts-5.json"><![CDATA[%dw 2.0
+
+type output = Array<{|  Name: String,   AccountId: String,   Phone: String,   Email: String|}> {"example": "[{\\\"Name\\\":\\\"Daniel Tefera\\\",\\\"AccountId\\\":\\\"yhdv1562bcxn7\\\",\\\"Phone\\\":\\\"(812)342 5357\\\",\\\"Email\\\":\\\"dant21@gmail.com\\\"},{\\\"Name\\\":\\\"Anania Samual\\\",\\\"AccountId\\\":\\\"gdbjs5648nb\\\",\\\"Phone\\\":\\\"(713)563 9803\\\",\\\"Email\\\":\\\"samuel@yahoo.com\\\"},{\\\"Name\\\":\\\"Moges Asnake\\\",\\\"AccountId\\\":\\\"jhfsg574bnb\\\",\\\"Phone\\\":\\\"(234)653 6374\\\",\\\"Email\\\":\\\"masna@Hotmail.com\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="Input" format="json">
+      <types:shape format="weave" example="examples/contacts-4.json"><![CDATA[%dw 2.0
+
+type Input = Array<{|  Name: String,   AccountId: String,   Phone: String,   Email: String|}> {"example": "[{\\\"Name\\\":\\\"Daniel Tefera\\\",\\\"AccountId\\\":\\\"yhdv1562bcxn7\\\",\\\"Phone\\\":\\\"(812)342 5357\\\",\\\"Email\\\":\\\"dant21@gmail.com\\\"},{\\\"Name\\\":\\\"Anania Samual\\\",\\\"AccountId\\\":\\\"gdbjs5648nb\\\",\\\"Phone\\\":\\\"(713)563 9803\\\",\\\"Email\\\":\\\"samuel@yahoo.com\\\"},{\\\"Name\\\":\\\"Moges Asnake\\\",\\\"AccountId\\\":\\\"jhfsg574bnb\\\",\\\"Phone\\\":\\\"(234)653 6374\\\",\\\"Email\\\":\\\"masna@Hotmail.com\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#456eb9a0-ef6c-45f9-b61d-1eaac23ccbe7">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Input"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#f0ad72a6-ec07-4441-a6e4-2b5129ef026c">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Input"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#3ac6ab2d-4dde-41eb-b81b-ea482aa39684"/>
+</types:mule>
