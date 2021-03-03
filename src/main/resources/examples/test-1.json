@@ -1,0 +1,13 @@
+
+[
+   {
+      "Id": 1,
+      "fullname": "AAA BBB",
+      "status": "A"
+   },
+   {
+      "Id": 2,
+      "fullname": "CCC DDD",
+      "status": "B"
+   }
+]

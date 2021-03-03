@@ -2,16 +2,16 @@
 <types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
   <types:catalog>
     <types:type name="output" format="json">
-      <types:shape format="weave" example="examples/contacts-5.json"><![CDATA[%dw 2.0
+      <types:shape format="weave" example="examples/test.json"><![CDATA[%dw 2.0
 
-type output = Array<{|  Name: String,   AccountId: String,   Phone: String,   Email: String|}> {"example": "[{\\\"Name\\\":\\\"Daniel Tefera\\\",\\\"AccountId\\\":\\\"yhdv1562bcxn7\\\",\\\"Phone\\\":\\\"(812)342 5357\\\",\\\"Email\\\":\\\"dant21@gmail.com\\\"},{\\\"Name\\\":\\\"Anania Samual\\\",\\\"AccountId\\\":\\\"gdbjs5648nb\\\",\\\"Phone\\\":\\\"(713)563 9803\\\",\\\"Email\\\":\\\"samuel@yahoo.com\\\"},{\\\"Name\\\":\\\"Moges Asnake\\\",\\\"AccountId\\\":\\\"jhfsg574bnb\\\",\\\"Phone\\\":\\\"(234)653 6374\\\",\\\"Email\\\":\\\"masna@Hotmail.com\\\"}]"}
+type output = Array<{|  Id: Number {"typeId": "int"},   fullname: String,   status: String|}> {"example": "[{\\\"Id\\\":1,\\\"fullname\\\":\\\"AAA BBB\\\",\\\"status\\\":\\\"A\\\"},{\\\"Id\\\":2,\\\"fullname\\\":\\\"CCC DDD\\\",\\\"status\\\":\\\"B\\\"}]"}
 
 ]]></types:shape>
     </types:type>
     <types:type name="Input" format="json">
-      <types:shape format="weave" example="examples/contacts-4.json"><![CDATA[%dw 2.0
+      <types:shape format="weave" example="examples/test-1.json"><![CDATA[%dw 2.0
 
-type Input = Array<{|  Name: String,   AccountId: String,   Phone: String,   Email: String|}> {"example": "[{\\\"Name\\\":\\\"Daniel Tefera\\\",\\\"AccountId\\\":\\\"yhdv1562bcxn7\\\",\\\"Phone\\\":\\\"(812)342 5357\\\",\\\"Email\\\":\\\"dant21@gmail.com\\\"},{\\\"Name\\\":\\\"Anania Samual\\\",\\\"AccountId\\\":\\\"gdbjs5648nb\\\",\\\"Phone\\\":\\\"(713)563 9803\\\",\\\"Email\\\":\\\"samuel@yahoo.com\\\"},{\\\"Name\\\":\\\"Moges Asnake\\\",\\\"AccountId\\\":\\\"jhfsg574bnb\\\",\\\"Phone\\\":\\\"(234)653 6374\\\",\\\"Email\\\":\\\"masna@Hotmail.com\\\"}]"}
+type Input = Array<{|  Id: Number {"typeId": "int"},   fullname: String,   status: String|}> {"example": "[{\\\"Id\\\":1,\\\"fullname\\\":\\\"AAA BBB\\\",\\\"status\\\":\\\"A\\\"},{\\\"Id\\\":2,\\\"fullname\\\":\\\"CCC DDD\\\",\\\"status\\\":\\\"B\\\"}]"}
 
 ]]></types:shape>
     </types:type>
@@ -40,4 +40,22 @@ type Input = Array<{|  Name: String,   AccountId: String,   Phone: String,   Ema
     </types:processor-declaration>
   </types:enrichment>
   <types:enrichment select="#3ac6ab2d-4dde-41eb-b81b-ea482aa39684"/>
+  <types:enrichment select="#84b72c7e-9e35-4d15-a26b-c49a6eb89111">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Input"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#7c2b18a0-64a9-4a6d-a4b4-1ee53bbcc538">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Input"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>
